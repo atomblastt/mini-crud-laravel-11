@@ -5,6 +5,8 @@ namespace App\Repositories\Users;
 use App\Models\Users\UserPersonal;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\BaseRepository;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserPersonalRepository extends BaseRepository
 {
@@ -72,18 +74,20 @@ class UserPersonalRepository extends BaseRepository
     }
 
     /**
-     * Delete By Ids
+     * Soft Delete By Id
      *
-     * @param array|int $ids
+     * @param int $id
      *
-     * @return Model
+     * @return Model|null
      */
-    public function deleteByIds(array|int $ids)
+    public function softDeleteById(int $id): ?Model
     {
-        if (! is_array($ids)) {
-            $ids = [$ids];
+        try {
+            $data = $this->model->findOrFail($id);
+            $data->delete();
+            return $data;
+        } catch (ModelNotFoundException $e) {
+            return null;
         }
-        $models = $this->model->whereIn('id', $ids)->get();
-        return $models->each(fn ($model) => $model->delete())->count();
     }
 }

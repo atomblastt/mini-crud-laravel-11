@@ -119,7 +119,7 @@ class UserPersonalController extends Controller
     public function destroy(string $id)
     {
         $id = decrypt($id);
-        $response = $this->service->deleteByIds([$id]);
+        $response = $this->service->softDeleteById($id);
         if ($response) {
             Session::flash('status', 'success');
             Session::flash('message', 'User data deleted successfully.');

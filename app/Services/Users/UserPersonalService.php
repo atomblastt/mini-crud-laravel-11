@@ -4,6 +4,7 @@ namespace App\Services\Users;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Model;
 use App\Repositories\Users\UserRepository;
 use App\Repositories\Users\UserPersonalRepository;
 
@@ -73,20 +74,14 @@ class UserPersonalService
     }
 
     /**
-     * Delete By Ids
+     * Soft Delete By Id
      *
-     * @param array|int $ids
+     * @param int $id
      *
-     * @return int
+     * @return Model|null
      */
-    public function deleteByIds($ids)
+    public function softDeleteById(int $id): ?Model
     {
-        if (empty($ids)) {
-            return 0;
-        }
-
-        $ids = is_array($ids) ? $ids : [$ids];
-
-        return $this->repository->deleteByIds($ids);
+        return $this->repository->softDeleteById($id);
     }
 }
