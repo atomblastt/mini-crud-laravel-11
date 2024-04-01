@@ -137,29 +137,53 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <input type="hidden" id="user-personal-id-view">
                             <div class="form-group row">
-                                <label for="user-personal-name-view" class="col-sm-2 col-form-label">Name</label>
-                                <div class="col-sm-10">
+                                <label for="user-personal-id-view" class="col-sm-3 col-form-label">ID</label>
+                                <label for="user-personal-id-view-two" class="col-sm-1 col-form-label">:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" readonly class="form-control-plaintext" id="user-personal-id-view">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="user-personal-name-view" class="col-sm-3 col-form-label">Name</label>
+                                <label for="user-personal-name-view-two" class="col-sm-1 col-form-label">:</label>
+                                <div class="col-sm-8">
                                     <input type="text" readonly class="form-control-plaintext" id="user-personal-name-view">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="user-personal-email-view" class="col-sm-2 col-form-label">Email</label>
-                                <div class="col-sm-10">
+                                <label for="user-personal-email-view" class="col-sm-3 col-form-label">Email</label>
+                                <label for="user-personal-email-view-two" class="col-sm-1 col-form-label">:</label>
+                                <div class="col-sm-8">
                                     <input type="text" readonly class="form-control-plaintext" id="user-personal-email-view">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="user-personal-phone-view" class="col-sm-2 col-form-label">Phone</label>
-                                <div class="col-sm-10">
+                                <label for="user-personal-phone-view" class="col-sm-3 col-form-label">Phone</label>
+                                <label for="user-personal-phone-view-two" class="col-sm-1 col-form-label">:</label>
+                                <div class="col-sm-8">
                                     <input type="text" readonly class="form-control-plaintext" id="user-personal-phone-view">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="user-personal-address-view" class="col-sm-2 col-form-label">Address</label>
-                                <div class="col-sm-10">
-                                    <textarea readonly class="form-control-plaintext" id="user-personal-address-view" rows="4"></textarea>
+                                <label for="user-personal-address-view" class="col-sm-3 col-form-label">Address</label>
+                                <label for="user-personal-address-view-two" class="col-sm-1 col-form-label">:</label>
+                                <div class="col-sm-8">
+                                    <textarea readonly class="form-control-plaintext" id="user-personal-address-view" rows="2"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="user-personal-created-at-view" class="col-sm-3 col-form-label">Created At</label>
+                                <label for="user-personal-created-at-view-two" class="col-sm-1 col-form-label">:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" readonly class="form-control-plaintext" id="user-personal-created-at-view">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="user-personal-updated-at-view" class="col-sm-3 col-form-label">Updated At</label>
+                                <label for="user-personal-updated-at-view-two" class="col-sm-1 col-form-label">:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" readonly class="form-control-plaintext" id="user-personal-updated-at-view">
                                 </div>
                             </div>
                         </div>
@@ -301,14 +325,20 @@
                 type: 'GET',
                 cache: false,
                 success: function(response) {
-                    console.log(userId)
-                    console.log(userName)
-                    
                     $('#user-personal-id-view').val(response.data.id);
                     $('#user-personal-name-view').val(response.data.name);
                     $('#user-personal-email-view').val(response.data.email);
                     $('#user-personal-phone-view').val(response.data.phone ? response.data.phone : 'no phone number');
                     $('#user-personal-address-view').val(response.data.address ? response.data.address : 'no address');
+                    
+                    var createdAt = new Date(response.data.created_at);
+                    var updatedAt = new Date(response.data.updated_at);
+                    var createdAtFormatted = formatDate(createdAt);
+                    var updatedAtFormatted = formatDate(updatedAt);
+
+                    $('#user-personal-created-at-view').val(createdAtFormatted);
+                    $('#user-personal-updated-at-view').val(updatedAtFormatted);
+
                     $('#userPersonalViewModalLabel').html('Detail User '+response.data.name);
 
                     $('.user-personal-edit').attr('data-user-id', userId);
@@ -404,6 +434,25 @@
                 }
             });
         });
+
+        /* this function to change format date for created at and updated at with format 'd F Y H:i:s' */
+        function formatDate(date) {
+            var day = date.getDate();
+            var monthIndex = date.getMonth();
+            var year = date.getFullYear();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+
+            var monthNames = [
+                "January", "February", "March",
+                "April", "May", "June", "July",
+                "August", "September", "October",
+                "November", "December"
+            ];
+
+            return day + ' ' + monthNames[monthIndex] + ' ' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+        }
     </script>
 </body>
 </html>
